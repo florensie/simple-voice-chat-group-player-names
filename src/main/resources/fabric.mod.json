@@ -1,15 +1,17 @@
 {
 	"schemaVersion": 1,
-	"id": "simple-voice-chat-group-player-names",
+	"id": "group-simple-voice-player-chat-names-enhanced-edition",
 	"version": "${version}",
-	"name": "Simple Voice Chat Group Player Names",
-	"description": "This mod displays the player names next to the group player heads in the hud.",
+	"name": "Group Simple Voice Player Chat Names: Enhanced Edition",
+	"description": "The 1-billionth Simple Voice Chat addon that shows names in the group HUD.",
 	"authors": [
-		"Greenman999"
+		"Greenman999",
+		"Florens"
 	],
 	"contact": {
-		"homepage": "https://greenman999.de",
-		"sources": "https://github.com/Greeenman999/simple-voice-chat-group-player-names"
+		"homepage": "https://github.com/florensie/simple-voice-chat-group-player-names",
+		"sources": "https://github.com/florensie/simple-voice-chat-group-player-names",
+		"issues": "https://github.com/florensie/simple-voice-chat-group-player-names/issues"
 	},
 	"license": "GPL-3.0",
 	"icon": "assets/simple-voice-chat-group-player-names/icon.png",
