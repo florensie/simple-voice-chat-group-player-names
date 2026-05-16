@@ -35,7 +35,7 @@
 		"minecraft": "~1.21.11",
 		"java": ">=21",
 		"fabric-api": "*",
-        "voicechat": ">=1.21.11",
+        "voicechat": "*",
         "cloth-config": ">=21"
 	}
 }
