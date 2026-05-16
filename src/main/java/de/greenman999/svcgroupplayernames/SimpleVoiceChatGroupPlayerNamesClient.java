@@ -7,20 +7,28 @@ import de.maxhenkel.voicechat.voice.common.PlayerState;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.text.Text;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializer {
-	@Override
-	public void onInitializeClient() {
-		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
-        Logger.getLogger("svcgroupplayernames").info("Simple Voice Chat Group Player Names Client Initialized");
+    private static final Map<UUID, Text> DISPLAY_NAMES = new ConcurrentHashMap<>();
 
+    @Override
+    public void onInitializeClient() {
         AutoConfig.register(ModConfig.class, Toml4jConfigSerializer::new);
-
-	}
+        ClientPlayNetworking.registerGlobalReceiver(GroupDisplayNamesPayload.ID, (payload, context) -> context.client().execute(() -> {
+            DISPLAY_NAMES.clear();
+            DISPLAY_NAMES.putAll(payload.displayNames());
+        }));
+    }
 
     public static void renderPlayerNames(DrawContext drawContext,
                                   int x,
@@ -30,6 +38,11 @@ public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializ
                                   PlayerState state,
                                   float scale,
                                   ClientVoicechat client) {
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        TextRenderer textRenderer = minecraftClient.textRenderer;
+        Text playerName = getDisplayName(state);
+        int playerNameWidth = textRenderer.getWidth(playerName);
+
         drawContext.getMatrices().pushMatrix();
         float invScale = 1.0f / scale;
         drawContext.getMatrices().scale(invScale, invScale);
@@ -43,19 +56,19 @@ public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializ
         if (horizontal) {
             drawContext.getMatrices().rotate((float) (Math.PI / 2));
             if (hudX < 0 && hudY < 0) {
-                nameOffsetX = (int) (-MinecraftClient.getInstance().textRenderer.getWidth(state.getName()) - (height * scale) - (scale - 1) - 4 - (scale - 1));
+                nameOffsetX = (int) (-playerNameWidth - (height * scale) - (scale - 1) - 4 - (scale - 1));
                 nameOffsetY = (int) (scale + (width * scale) / 2 - (float) (7 / 2) - 1);
             } else if (hudX < 0) {
                 nameOffsetX = (int) ((int) (height * scale) + (scale - 1) + 4 + (scale - 1));
             } else if (hudY < 0) {
                 nameOffsetY = (int) (y - (width * scale) + 7 + (2 - scale) + (width * scale) / 2 - (float) (7 / 2) - 1);
-                nameOffsetX = (int) (-MinecraftClient.getInstance().textRenderer.getWidth(state.getName()) - (height * scale) - (scale - 1) - 4 - (scale - 1));
+                nameOffsetX = (int) (-playerNameWidth - (height * scale) - (scale - 1) - 4 - (scale - 1));
             } else {
                 nameOffsetY = (int) (y - (width * scale) - scale + (width * scale) / 2 - (float) (7 / 2) - 1);
             }
         } else {
             if (hudX < 0) {
-                nameOffsetX = (int) (-MinecraftClient.getInstance().textRenderer.getWidth(state.getName()) - (width * scale) - (scale - 1) - 4 - (scale - 1));
+                nameOffsetX = (int) (-playerNameWidth - (width * scale) - (scale - 1) - 4 - (scale - 1));
             }
             if (hudY < 0) {
                 nameOffsetY = (int) (y - (width * scale) + 7 + (2 - scale) + ((height * scale) / 2) - (float) (7 / 2) - 1);
@@ -69,14 +82,22 @@ public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializ
             drawContext.getMatrices().popMatrix();
             return;
         }
-        drawContext.drawText(MinecraftClient.getInstance().textRenderer, state.getName(), nameOffsetX, nameOffsetY, client.getTalkCache().isTalking(state.getUuid()) ? transparencyWhenTalking : transparencyWhenNotTalking, false);
+        drawContext.drawText(textRenderer, playerName, nameOffsetX, nameOffsetY, client.getTalkCache().isTalking(state.getUuid()) ? transparencyWhenTalking : transparencyWhenNotTalking, false);
         drawContext.getMatrices().popMatrix();
     }
 
+    private static Text getDisplayName(PlayerState state) {
+        Text displayName = DISPLAY_NAMES.get(state.getUuid());
+        if (displayName != null) {
+            return displayName;
+        }
+        return Text.literal(state.getName());
+    }
+
     public static int whiteWithAlpha(int percent) {
-        percent = Math.max(0, Math.min(100, percent));
+        percent = Math.clamp(percent, 0, 100);
         int alpha = Math.round(percent / 100.0f * 255.0f);
-        alpha = Math.max(0, Math.min(255, alpha));
+        alpha = Math.clamp(alpha, 0, 255);
         return ((alpha & 0xFF) << 24) | 0x00FFFFFF;
     }
 
