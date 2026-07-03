@@ -12,6 +12,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.RotationAxis;
 
 import java.util.Map;
 import java.util.UUID;
@@ -43,9 +44,9 @@ public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializ
         Text playerName = getDisplayName(state);
         int playerNameWidth = textRenderer.getWidth(playerName);
 
-        drawContext.getMatrices().pushMatrix();
+        drawContext.getMatrices().push();
         float invScale = 1.0f / scale;
-        drawContext.getMatrices().scale(invScale, invScale);
+        drawContext.getMatrices().scale(invScale, invScale, 1.0f);
 
         int nameOffsetX = (int) (x + (width * scale) + (scale - 1) + 4 + scale - 1);
         int nameOffsetY = (int) ((y + scale - 1) + ((height * scale) / 2) - (float) (7 / 2) - 1);
@@ -54,7 +55,7 @@ public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializ
         int hudY = VoicechatClient.CLIENT_CONFIG.groupPlayerIconPosY.get();
         boolean horizontal = VoicechatClient.CLIENT_CONFIG.groupPlayerIconOrientation.get().equals(GroupPlayerIconOrientation.HORIZONTAL);
         if (horizontal) {
-            drawContext.getMatrices().rotate((float) (Math.PI / 2));
+            drawContext.getMatrices().multiply(RotationAxis.POSITIVE_Z.rotation((float) (Math.PI / 2)));
             if (hudX < 0 && hudY < 0) {
                 nameOffsetX = (int) (-playerNameWidth - (height * scale) - (scale - 1) - 4 - (scale - 1));
                 nameOffsetY = (int) (scale + (width * scale) / 2 - (float) (7 / 2) - 1);
@@ -79,11 +80,11 @@ public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializ
         int transparencyWhenTalking = whiteWithAlpha(config.transparencyWhenTalking);
         int transparencyWhenNotTalking = whiteWithAlpha(config.transparencyWhenNotTalking);
         if (config.onlyShowNamesWhenTalking && !client.getTalkCache().isTalking(state.getUuid())) {
-            drawContext.getMatrices().popMatrix();
+            drawContext.getMatrices().pop();
             return;
         }
         drawContext.drawText(textRenderer, playerName, nameOffsetX, nameOffsetY, client.getTalkCache().isTalking(state.getUuid()) ? transparencyWhenTalking : transparencyWhenNotTalking, false);
-        drawContext.getMatrices().popMatrix();
+        drawContext.getMatrices().pop();
     }
 
     private static Text getDisplayName(PlayerState state) {
