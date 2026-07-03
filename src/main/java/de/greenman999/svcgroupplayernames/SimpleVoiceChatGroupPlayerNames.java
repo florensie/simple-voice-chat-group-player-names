@@ -10,7 +10,7 @@ public class SimpleVoiceChatGroupPlayerNames implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        PayloadTypeRegistry.playS2C().register(GroupDisplayNamesPayload.ID, GroupDisplayNamesPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(GroupDisplayNamesPayload.ID, GroupDisplayNamesPayload.CODEC);
         ServerTickEvents.END_SERVER_TICK.register(ServerDisplayNameSync::tick);
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
                 ServerDisplayNameSync.sendTo(handler.getPlayer()));

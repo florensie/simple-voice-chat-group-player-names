@@ -1,44 +1,44 @@
 package de.greenman999.svcgroupplayernames;
 
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextCodecs;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public record GroupDisplayNamesPayload(Map<UUID, Text> displayNames) implements CustomPayload {
-    public static final Id<GroupDisplayNamesPayload> ID = new Id<>(Identifier.of(SimpleVoiceChatGroupPlayerNames.MOD_ID, "group_display_names"));
-    public static final PacketCodec<RegistryByteBuf, GroupDisplayNamesPayload> CODEC = PacketCodec.ofStatic(
+public record GroupDisplayNamesPayload(Map<UUID, Component> displayNames) implements CustomPacketPayload {
+    public static final Type<GroupDisplayNamesPayload> ID = new Type<>(Identifier.fromNamespaceAndPath(SimpleVoiceChatGroupPlayerNames.MOD_ID, "group_display_names"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, GroupDisplayNamesPayload> CODEC = CustomPacketPayload.codec(
             GroupDisplayNamesPayload::write,
             GroupDisplayNamesPayload::read
     );
 
-    private static GroupDisplayNamesPayload read(RegistryByteBuf buf) {
+    private static GroupDisplayNamesPayload read(RegistryFriendlyByteBuf buf) {
         int size = buf.readVarInt();
-        Map<UUID, Text> displayNames = new LinkedHashMap<>(size);
+        Map<UUID, Component> displayNames = new LinkedHashMap<>(size);
         for (int i = 0; i < size; i++) {
-            UUID uuid = buf.readUuid();
-            Text displayName = TextCodecs.UNLIMITED_REGISTRY_PACKET_CODEC.decode(buf);
+            UUID uuid = buf.readUUID();
+            Component displayName = ComponentSerialization.TRUSTED_STREAM_CODEC.decode(buf);
             displayNames.put(uuid, displayName);
         }
         return new GroupDisplayNamesPayload(displayNames);
     }
 
-    private static void write(RegistryByteBuf buf, GroupDisplayNamesPayload payload) {
+    private static void write(GroupDisplayNamesPayload payload, RegistryFriendlyByteBuf buf) {
         buf.writeVarInt(payload.displayNames.size());
-        for (Map.Entry<UUID, Text> entry : payload.displayNames.entrySet()) {
-            buf.writeUuid(entry.getKey());
-            TextCodecs.UNLIMITED_REGISTRY_PACKET_CODEC.encode(buf, entry.getValue());
+        for (Map.Entry<UUID, Component> entry : payload.displayNames.entrySet()) {
+            buf.writeUUID(entry.getKey());
+            ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, entry.getValue());
         }
     }
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Type<? extends CustomPacketPayload> type() {
         return ID;
     }
 }

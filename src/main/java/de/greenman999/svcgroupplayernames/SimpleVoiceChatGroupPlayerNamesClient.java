@@ -1,6 +1,7 @@
 package de.greenman999.svcgroupplayernames;
 
 import de.maxhenkel.voicechat.VoicechatClient;
+import de.maxhenkel.voicechat.voice.client.ClientManager;
 import de.maxhenkel.voicechat.voice.client.ClientVoicechat;
 import de.maxhenkel.voicechat.voice.client.GroupPlayerIconOrientation;
 import de.maxhenkel.voicechat.voice.common.PlayerState;
@@ -8,44 +9,48 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.network.chat.Component;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializer {
-    private static final Map<UUID, Text> DISPLAY_NAMES = new ConcurrentHashMap<>();
+    private static final Map<UUID, Component> DISPLAY_NAMES = new ConcurrentHashMap<>();
 
     @Override
     public void onInitializeClient() {
         AutoConfig.register(ModConfig.class, Toml4jConfigSerializer::new);
+        //noinspection resource
         ClientPlayNetworking.registerGlobalReceiver(GroupDisplayNamesPayload.ID, (payload, context) -> context.client().execute(() -> {
             DISPLAY_NAMES.clear();
             DISPLAY_NAMES.putAll(payload.displayNames());
         }));
     }
 
-    public static void renderPlayerNames(DrawContext drawContext,
-                                  int x,
-                                  int y,
-                                  int width,
-                                  int height,
-                                  PlayerState state,
-                                  float scale,
-                                  ClientVoicechat client) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        TextRenderer textRenderer = minecraftClient.textRenderer;
-        Text playerName = getDisplayName(state);
-        int playerNameWidth = textRenderer.getWidth(playerName);
+    public static void renderPlayerNames(
+            GuiGraphicsExtractor guiGraphics,
+            int x,
+            int y,
+            int width,
+            int height,
+            PlayerState state,
+            float scale
+    ) {
+        Minecraft minecraftClient = Minecraft.getInstance();
+        Font font = minecraftClient.font;
+        ClientVoicechat client = ClientManager.getClient();
+        if (client == null) return;
 
-        drawContext.getMatrices().pushMatrix();
+        Component playerName = getDisplayName(state);
+        int playerNameWidth = font.width(playerName);
+
+        guiGraphics.pose().pushMatrix();
         float invScale = 1.0f / scale;
-        drawContext.getMatrices().scale(invScale, invScale);
+        guiGraphics.pose().scale(invScale, invScale);
 
         int nameOffsetX = (int) (x + (width * scale) + (scale - 1) + 4 + scale - 1);
         int nameOffsetY = (int) ((y + scale - 1) + ((height * scale) / 2) - (float) (7 / 2) - 1);
@@ -54,7 +59,7 @@ public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializ
         int hudY = VoicechatClient.CLIENT_CONFIG.groupPlayerIconPosY.get();
         boolean horizontal = VoicechatClient.CLIENT_CONFIG.groupPlayerIconOrientation.get().equals(GroupPlayerIconOrientation.HORIZONTAL);
         if (horizontal) {
-            drawContext.getMatrices().rotate((float) (Math.PI / 2));
+            guiGraphics.pose().rotate((float) (Math.PI / 2));
             if (hudX < 0 && hudY < 0) {
                 nameOffsetX = (int) (-playerNameWidth - (height * scale) - (scale - 1) - 4 - (scale - 1));
                 nameOffsetY = (int) (scale + (width * scale) / 2 - (float) (7 / 2) - 1);
@@ -79,19 +84,19 @@ public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializ
         int transparencyWhenTalking = whiteWithAlpha(config.transparencyWhenTalking);
         int transparencyWhenNotTalking = whiteWithAlpha(config.transparencyWhenNotTalking);
         if (config.onlyShowNamesWhenTalking && !client.getTalkCache().isTalking(state.getUuid())) {
-            drawContext.getMatrices().popMatrix();
+            guiGraphics.pose().popMatrix();
             return;
         }
-        drawContext.drawText(textRenderer, playerName, nameOffsetX, nameOffsetY, client.getTalkCache().isTalking(state.getUuid()) ? transparencyWhenTalking : transparencyWhenNotTalking, false);
-        drawContext.getMatrices().popMatrix();
+        guiGraphics.text(font, playerName, nameOffsetX, nameOffsetY, client.getTalkCache().isTalking(state.getUuid()) ? transparencyWhenTalking : transparencyWhenNotTalking, false);
+        guiGraphics.pose().popMatrix();
     }
 
-    private static Text getDisplayName(PlayerState state) {
-        Text displayName = DISPLAY_NAMES.get(state.getUuid());
+    private static Component getDisplayName(PlayerState state) {
+        Component displayName = DISPLAY_NAMES.get(state.getUuid());
         if (displayName != null) {
             return displayName;
         }
-        return Text.literal(state.getName());
+        return Component.literal(state.getName());
     }
 
     public static int whiteWithAlpha(int percent) {
