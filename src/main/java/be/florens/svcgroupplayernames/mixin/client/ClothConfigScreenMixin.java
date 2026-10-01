@@ -1,6 +1,8 @@
 package be.florens.svcgroupplayernames.mixin.client;
 
 import be.florens.svcgroupplayernames.config.AnimatedConfigTitle;
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
@@ -13,8 +15,10 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ClothConfigScreen.class)
 public class ClothConfigScreenMixin {
-    @WrapOperation(method = "extractRenderState", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;centeredText(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;III)V"))
+    @Definition(id = "centeredText", method = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;centeredText(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;III)V")
+    @Definition(id = "title", field = "Lme/shedaniel/clothconfig2/gui/ClothConfigScreen;title:Lnet/minecraft/network/chat/Component;")
+    @Expression("?.centeredText(?, this.title, ?, ?, ?)")
+    @WrapOperation(method = "extractRenderState", at = @At(value = "MIXINEXTRAS:EXPRESSION"))
     private void renderTitle(GuiGraphicsExtractor graphics, Font font, Component title, int x, int y, int color,
                              Operation<Void> original) {
         if (title.getContents() instanceof TranslatableContents translation
