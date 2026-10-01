@@ -5,11 +5,11 @@
 	"name": "Group Simple Voice Player Chat Names: Enhanced Edition",
 	"description": "The 1-billionth Simple Voice Chat addon that shows names in the group HUD.",
 	"authors": [
-		"Greenman999",
-		"Florens"
+		"Florens",
+		"Greenman999"
 	],
 	"contact": {
-		"homepage": "https://github.com/florensie/simple-voice-chat-group-player-names",
+		"homepage": "https://modrinth.com/mod/group-simple-voice-player-chat-names-enhanced-edition",
 		"sources": "https://github.com/florensie/simple-voice-chat-group-player-names",
 		"issues": "https://github.com/florensie/simple-voice-chat-group-player-names/issues"
 	},

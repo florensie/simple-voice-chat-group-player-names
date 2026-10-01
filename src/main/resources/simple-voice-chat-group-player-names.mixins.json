@@ -3,7 +3,8 @@
 	"package": "be.florens.svcgroupplayernames.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-      "GroupChatManagerMixin"
+      "GroupChatManagerMixin",
+      "ClothConfigScreenMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
