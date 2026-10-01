@@ -1,4 +1,4 @@
-package de.greenman999.svcgroupplayernames;
+package be.florens.svcgroupplayernames;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

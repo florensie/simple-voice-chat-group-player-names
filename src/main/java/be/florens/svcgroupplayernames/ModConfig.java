@@ -1,4 +1,4 @@
-package de.greenman999.svcgroupplayernames;
+package be.florens.svcgroupplayernames;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;

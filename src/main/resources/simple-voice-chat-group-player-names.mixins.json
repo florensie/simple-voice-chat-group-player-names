@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "de.greenman999.svcgroupplayernames.mixin.client",
+	"package": "be.florens.svcgroupplayernames.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
       "GroupChatManagerMixin"

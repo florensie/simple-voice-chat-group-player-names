@@ -18,24 +18,24 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"de.greenman999.svcgroupplayernames.SimpleVoiceChatGroupPlayerNames"
+			"be.florens.svcgroupplayernames.SimpleVoiceChatGroupPlayerNames"
 		],
 		"client": [
-			"de.greenman999.svcgroupplayernames.SimpleVoiceChatGroupPlayerNamesClient"
+			"be.florens.svcgroupplayernames.SimpleVoiceChatGroupPlayerNamesClient"
 		],
         "modmenu": [
-          "de.greenman999.svcgroupplayernames.ModMenuIntegration"
+          "be.florens.svcgroupplayernames.ModMenuIntegration"
         ]
 	},
 	"mixins": [
 		"simple-voice-chat-group-player-names.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.19.3",
-		"minecraft": ">=26.1.2",
+		"fabricloader": ">=0.19.5",
+		"minecraft": ">=26.3",
 		"java": ">=25",
 		"fabric-api": "*",
         "voicechat": "*",
-        "cloth-config": ">=26.1"
+        "cloth-config": ">=26.3"
 	}
 }

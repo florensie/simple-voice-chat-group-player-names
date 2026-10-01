@@ -1,4 +1,4 @@
-package de.greenman999.svcgroupplayernames;
+package be.florens.svcgroupplayernames;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;

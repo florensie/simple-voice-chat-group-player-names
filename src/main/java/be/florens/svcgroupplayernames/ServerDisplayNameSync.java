@@ -1,4 +1,4 @@
-package de.greenman999.svcgroupplayernames;
+package be.florens.svcgroupplayernames;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.chat.Component;

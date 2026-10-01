@@ -1,4 +1,4 @@
-package de.greenman999.svcgroupplayernames;
+package be.florens.svcgroupplayernames;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
