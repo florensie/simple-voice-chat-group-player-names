@@ -60,7 +60,7 @@ publishMods {
 	modLoaders.add("fabric")
 
 	modrinth {
-		projectId.set("group-simple-voice-player-chat-names-enhanced-edition")
+		projectId.set("oKsphwOn")
 		accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
 		minecraftVersions.add(providers.gradleProperty("minecraft_version").get())
 		requires("fabric-api", "simple-voice-chat", "cloth-config")
