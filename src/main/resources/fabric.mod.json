@@ -24,7 +24,7 @@
 			"be.florens.svcgroupplayernames.SimpleVoiceChatGroupPlayerNamesClient"
 		],
         "modmenu": [
-          "be.florens.svcgroupplayernames.ModMenuIntegration"
+          "be.florens.svcgroupplayernames.config.ModMenuIntegration"
         ]
 	},
 	"mixins": [

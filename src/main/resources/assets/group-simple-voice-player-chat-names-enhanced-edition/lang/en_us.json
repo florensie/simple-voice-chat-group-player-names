@@ -1,0 +1,21 @@
+{
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.title": "Group Simple Voice Player Chat Names: Enhanced Edition",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.category.group_hud": "SVC Options",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.category.group_hud.description": "These options belong to Simple Voice Chat. Saving changes here updates its config directly.",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.category.default": "Opacity",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.option.opacityWhenTalking": "Name opacity when talking",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.option.opacityWhenTalking.@Tooltip": "Sets the opacity of player names while talking.\n0 hides names, 100 is fully opaque.",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.option.opacityWhenNotTalking": "Name opacity when not talking",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.option.opacityWhenNotTalking.@Tooltip": "Sets the opacity of player names while not talking.\n0 hides names, 100 is fully opaque.",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.option.iconOpacityWhenTalking": "Icon opacity when talking",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.option.iconOpacityWhenTalking.@Tooltip": "Sets the opacity of player icons while talking.\n0 hides icons, 100 is fully opaque.",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.option.iconOpacityWhenNotTalking": "Icon opacity when not talking",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.option.iconOpacityWhenNotTalking.@Tooltip": "Sets the opacity of player icons while not talking.\n0 hides icons, 100 is fully opaque.",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.presets": "Preset",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.presets.always_visible": "Always visible",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.presets.fade_silent": "Fade silent players",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.presets.only_talking": "Only talking players",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.presets.icons_only": "Icons only",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.presets.custom": "Custom",
+  "text.autoconfig.group-simple-voice-player-chat-names-enhanced-edition.presets.@Tooltip": "Quick presets for the options below."
+}

@@ -1,9 +1,0 @@
-{
-  "text.autoconfig.svcgroupplayernames.option.onlyShowNamesWhenTalking": "Only show names when talking",
-  "text.autoconfig.svcgroupplayernames.option.onlyShowNamesWhenTalking.@Tooltip": "If enabled, player names will only be displayed when the respective player is talking.",
-  "text.autoconfig.svcgroupplayernames.option.transparencyWhenTalking": "Transparency when talking",
-  "text.autoconfig.svcgroupplayernames.option.transparencyWhenTalking.@Tooltip": "Sets the transparency of the player names when the respective player is talking. 0 is fully transparent, 100 is fully opaque.",
-  "text.autoconfig.svcgroupplayernames.option.transparencyWhenNotTalking": "Transparency when not talking",
-  "text.autoconfig.svcgroupplayernames.option.transparencyWhenNotTalking.@Tooltip": "Sets the transparency of the player names when the respective player is not talking. 0 is fully transparent, 100 is fully opaque.",
-  "text.autoconfig.svcgroupplayernames.title": "Simple Voice Chat Group Player Names"
-}

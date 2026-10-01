@@ -1,5 +1,6 @@
 package be.florens.svcgroupplayernames;
 
+import be.florens.svcgroupplayernames.config.ModConfig;
 import de.maxhenkel.voicechat.VoicechatClient;
 import de.maxhenkel.voicechat.voice.client.ClientManager;
 import de.maxhenkel.voicechat.voice.client.ClientVoicechat;
@@ -42,8 +43,8 @@ public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializ
     ) {
         Minecraft minecraftClient = Minecraft.getInstance();
         Font font = minecraftClient.font;
-        ClientVoicechat client = ClientManager.getClient();
-        if (client == null) return;
+        int opacity = getNameOpacity(state);
+        if (opacity <= 0) return;
 
         Component playerName = getDisplayName(state);
         int playerNameWidth = font.width(playerName);
@@ -80,15 +81,27 @@ public class SimpleVoiceChatGroupPlayerNamesClient implements ClientModInitializ
             }
         }
 
-        ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
-        int transparencyWhenTalking = whiteWithAlpha(config.transparencyWhenTalking);
-        int transparencyWhenNotTalking = whiteWithAlpha(config.transparencyWhenNotTalking);
-        if (config.onlyShowNamesWhenTalking && !client.getTalkCache().isTalking(state.getUuid())) {
-            guiGraphics.pose().popMatrix();
-            return;
+        if (getIconOpacity(state) <= 0) {
+            nameOffsetX = (horizontal ? hudY < 0 : hudX < 0) ? -playerNameWidth : 0;
         }
-        guiGraphics.text(font, playerName, nameOffsetX, nameOffsetY, client.getTalkCache().isTalking(state.getUuid()) ? transparencyWhenTalking : transparencyWhenNotTalking, false);
+
+        guiGraphics.text(font, playerName, nameOffsetX, nameOffsetY, whiteWithAlpha(opacity), false);
         guiGraphics.pose().popMatrix();
+    }
+
+    public static int getNameOpacity(PlayerState state) {
+        ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+        return isTalking(state) ? config.opacityWhenTalking : config.opacityWhenNotTalking;
+    }
+
+    public static int getIconOpacity(PlayerState state) {
+        ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+        return isTalking(state) ? config.iconOpacityWhenTalking : config.iconOpacityWhenNotTalking;
+    }
+
+    private static boolean isTalking(PlayerState state) {
+        ClientVoicechat client = ClientManager.getClient();
+        return client != null && client.getTalkCache().isTalking(state.getUuid());
     }
 
     private static Component getDisplayName(PlayerState state) {
