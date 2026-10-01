@@ -55,6 +55,7 @@ tasks.jar {
 
 publishMods {
 	file.set(tasks.jar.flatMap { it.archiveFile })
+	displayName.set(version)
 	changelog.set("")
 	type.set(me.modmuss50.mpp.ReleaseType.STABLE)
 	modLoaders.add("fabric")
